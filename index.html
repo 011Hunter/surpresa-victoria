@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para a Victoria, com Amor!</title>
+    
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFF0F5; /* Rosa claro */
+            color: #000;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 90%;
+            box-sizing: border-box;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .main-message {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.6em;
+            margin-top: 20px;
+            font-style: italic;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            color: #d82b7f;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background-color: white;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 350px;
+            object-fit: contain;
+            display: none;
+        }
+
+        .gallery-image.active {
+            display: block;
+        }
+
+        .gallery-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .gallery-button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .prev-button {
+            left: 10px;
+        }
+
+        .next-button {
+            right: 10px;
+        }
+
+        .surprise-button {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .surprise-button:hover {
+            background-color: #e05e9e;
+            transform: translateY(-3px);
+        }
+
+        #surpriseMessage {
+            margin-top: 30px;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #ff69b4;
+            display: none;
+            animation: fadeIn 1s ease-out;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            font-family: 'Pacifico', cursive;
+            color: #d82b7f;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2em; }
+            p { font-size: 1.2em; }
+            .main-message { font-size: 1.2em; }
+            .gallery-image { height: 300px; }
+            .surprise-button { font-size: 1.1em; padding: 12px 25px; }
+            #surpriseMessage { font-size: 1.4em; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8em; }
+            p { font-size: 1em; }
+            .main-message { font-size: 0.9em; }
+            .gallery-image { height: 250px; }
+            .surprise-button { font-size: 1em; padding: 10px 20px; }
+            #surpriseMessage { font-size: 1.2em; }
+        }
+
+        /* Animações e Corações (Sem alterações) */
+        .heart-bg {
+            position: absolute;
+            transform: rotate(-45deg);
+            animation: rise-bg var(--duration) linear infinite;
+            opacity: 0;
+            z-index: 0;
+            background-color: var(--heart-color);
+        }
+
+        .heart-bg::before, .heart-bg::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background-color: inherit; border-radius: 50%;
+        }
+        .heart-bg::before { top: -50%; left: 0; }
+        .heart-bg::after { top: 0; left: 50%; }
+
+        @keyframes rise-bg {
+            0% { transform: translateY(0) rotate(-45deg) scale(0); opacity: 0; }
+            10% { opacity: 0.8; transform: translateY(-10%) rotate(-45deg) scale(1); }
+            80% { opacity: 0.8; transform: translateY(-80%) rotate(-45deg) scale(1); }
+            100% { transform: translateY(-100%) rotate(-45deg) scale(0); opacity: 0; }
+        }
+
+        .corner-heart {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #ff8dc2;
+            transform: rotate(-45deg);
+            z-index: 0;
+            opacity: 0.7;
+            filter: blur(1px);
+        }
+
+        .corner-heart::before, .corner-heart::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background-color: inherit; border-radius: 50%;
+        }
+        .corner-heart::before { top: -50%; left: 0; }
+        .corner-heart::after { top: 0; left: 50%; }
+
+        .corner-top-left { top: -30px; left: -30px; }
+        .corner-top-right { top: -30px; right: -30px; }
+        .corner-bottom-left { bottom: -30px; left: -30px; }
+        .corner-bottom-right { bottom: -30px; right: -30px; }
+        
+        .heart-float {
+            position: absolute;
+            transform: rotate(-45deg);
+            animation: floatAround var(--float-duration) ease-in-out infinite alternate;
+            opacity: 0.6;
+            z-index: 1;
+            background-color: var(--heart-color);
+        }
+
+        .heart-float::before, .heart-float::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background-color: inherit; border-radius: 50%;
+        }
+        .heart-float::before { top: -50%; left: 0; }
+        .heart-float::after { top: 0; left: 50%; }
+
+        @keyframes floatAround {
+            0% { transform: translateY(0px) translateX(0px) rotate(-45deg); }
+            100% { transform: translateY(20px) translateX(10px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minha Victoria</h1>
+        <p>Para a minha Victoria</p>
+        <p class="main-message">
+            Victoria, meu amor, a verdade é que, mesmo não te vendo pessoalmente, sua companhia todos os dias me faz um bem gigantesco. Seu sorriso e sua voz têm o poder de diminuir qualquer distância. Saiba que a quantidade de quilômetros não chega nem perto da imensidão do meu amor por você. Esse carinho que cresce a cada dia é a certeza de que a gente vai se encontrar. Eu te amo!
+        </p>
+
+        <div class="gallery-container">
+            <img class="gallery-image active" src="foto1.jpg" alt="Nossa foto 1">
+            <img class="gallery-image" src="foto2.jpg" alt="Nossa foto 2">
+            <img class="gallery-image" src="foto3.jpg" alt="Nossa foto 3">
+            <img class="gallery-image" src="foto4.jpg" alt="Nossa foto 4">
+            <img class="gallery-image" src="foto5.jpg" alt="Nossa foto 5">
+            <img class="gallery-image" src="foto6.jpg" alt="Nossa foto 6">
+            <img class="gallery-image" src="foto7.jpg" alt="Nossa foto 7">
+            <button class="gallery-button prev-button" onclick="changePhoto(-1)">&#10094;</button>
+            <button class="gallery-button next-button" onclick="changePhoto(1)">&#10095;</button>
+        </div>
+
+        <button class="surprise-button" onclick="revealSurpriseAndPlayMusic()">
+            Clique para uma surpresa!
+        </button>
+
+        <p id="surpriseMessage">
+            E tem mais... Victoria, saiba que o nosso laço é forte o suficiente para superar qualquer obstáculo. Não importa o problema que você esteja enfrentando, eu estarei sempre aqui para te apoiar em tudo. Nos momentos felizes, vou rir com você; nos momentos ruins, vou segurar sua mão. Você nunca estará sozinha. Eu te amo!
+        </p>
+    </div>
+
+    
+<div class="corner-heart corner-top-left"></div>
+    <div class="corner-heart corner-top-right"></div>
+    <div class="corner-heart corner-bottom-left"></div>
+    <div class="corner-heart corner-bottom-right"></div>
+
+    <audio id="background-music" loop>
+        <source src="careless.m4a" type="audio/m4a"> 
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+    <script>
+        const heartColors = ['#ff69b4', '#ff4d88', '#ff8dc2', '#e05e9e'];
+
+        function createBackgroundHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-bg');
+            document.body.appendChild(heart);
+
+            heart.style.width = Math.random() * 25 + 15 + 'px';
+            heart.style.height = heart.style.width;
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.bottom = '-50px';
+
+            heart.style.setProperty('--heart-color', heartColors[Math.floor(Math.random() * heartColors.length)]);
+            heart.style.setProperty('--duration', Math.random() * 8 + 6 + 's');
+            heart.style.animationDelay = Math.random() * 3 + 's';
+
+            setTimeout(() => {
+                heart.remove();
+            }, parseFloat(heart.style.getPropertyValue('--duration')) * 1000 + parseFloat(heart.style.animationDelay) * 1000);
+        }
+        setInterval(createBackgroundHeart, 150);
+
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-float');
+            const container = document.querySelector('.container');
+            container.appendChild(heart);
+
+            const containerRect = container.getBoundingClientRect();
+            heart.style.left = Math.random() * containerRect.width + 'px';
+            heart.style.top = Math.random() * containerRect.height + 'px';
+            
+            heart.style.width = Math.random() * 15 + 5 + 'px';
+            heart.style.height = heart.style.width;
+
+            heart.style.setProperty('--heart-color', heartColors[Math.floor(Math.random() * heartColors.length)]);
+            heart.style.setProperty('--float-duration', Math.random() * 4 + 3 + 's');
+            heart.style.animationDelay = Math.random() * 2 + 's';
+
+            setTimeout(() => {
+                heart.remove();
+            }, parseFloat(heart.style.getPropertyValue('--float-duration')) * 1000 * 2 + parseFloat(heart.style.animationDelay) * 1000);
+        }
+        setInterval(createFloatingHeart, 500);
+
+        let currentPhotoIndex = 0;
+        const photos = document.querySelectorAll('.gallery-image');
+
+        function showPhoto(index) {
+            photos.forEach((photo, i) => {
+                photo.classList.remove('active');
+                if (i === index) {
+                    photo.classList.add('active');
+                }
+            });
+        }
+
+        function changePhoto(direction) {
+            currentPhotoIndex += direction;
+            if (currentPhotoIndex < 0) {
+                currentPhotoIndex = photos.length - 1;
+            } else if (currentPhotoIndex >= photos.length) {
+                currentPhotoIndex = 0;
+            }
+            showPhoto(currentPhotoIndex);
+        }
+
+        function revealSurpriseAndPlayMusic() {
+            const surpriseMessage = document.getElementById('surpriseMessage');
+            const surpriseButton = document.querySelector('.surprise-button');
+            const music = document.getElementById('background-music');
+
+            if (surpriseMessage.style.display === 'none' || surpriseMessage.style.display === '') {
+                surpriseMessage.style.display = 'block';
+                surpriseButton.textContent = 'Esconder mensagem';
+                music.play().catch(error => {
+                    console.log("Falha ao tocar a música: ", error);
+                });
+            } else {
+                surpriseMessage.style.display = 'none';
+                surpriseButton.textContent = 'Clique para uma surpresa!';
+                music.pause();
+            }
+        }
+        showPhoto(currentPhotoIndex);
+    </script>
+</body>
+</html>
